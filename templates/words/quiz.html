@@ -1,0 +1,44 @@
+<h1>Hello</h1>
+
+
+
+<div class="bg-white p-6 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold mb-6">Vocabulary Quiz</h1>
+    <form id="quiz-form">
+        {% for item in quiz_data %}
+            <div class="mb-6 border-b pb-4">
+                <p class="text-lg mb-2"><strong>Definition:</strong> {{ item.definition }}</p>
+                <p class="text-lg mb-4">Complete this sentence:</p>
+                <p class="text-gray-600">{{ item.example }}</p>
+                <input type="text" 
+                       class="border p-2 rounded mt-2" 
+                       data-word="{{ item.word }}"
+                       placeholder="Enter the missing word">
+                <p class="text-sm text-red-500 mt-1 hidden">Incorrect. Try again!</p>
+            </div>
+        {% endfor %}
+        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+            Check Answers
+        </button>
+    </form>
+</div>
+
+<script>
+document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let inputs = document.querySelectorAll('input[data-word]');
+    let allCorrect = true;
+    
+    inputs.forEach(input => {
+        let correct = input.value.toLowerCase() === input.dataset.word.toLowerCase();
+        input.classList.toggle('border-green-500', correct);
+        input.classList.toggle('border-red-500', !correct);
+        input.nextElementSibling.classList.toggle('hidden', correct);
+        if (!correct) allCorrect = false;
+    });
+    
+    if (allCorrect) {
+        alert('Congratulations! You got all answers correct!');
+    }
+});
+</script>

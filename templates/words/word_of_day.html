@@ -1,0 +1,63 @@
+
+<div class="bg-white p-6 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-bold mb-4">Word of the Day</h1>
+    {% if word %}
+        <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-blue-600">{{ word.word }}</h2>
+            <p class="text-gray-700 mt-2"><strong>Definition:</strong> {{ word.definition }}</p>
+            {% if word.example %}
+                <p class="text-gray-600 mt-2"><strong>Example:</strong> {{ word.example }}</p>
+            {% endif %}
+            {% if word.synonyms %}
+                <p class="text-gray-600 mt-2"><strong>Synonyms:</strong> {{ word.synonyms }}</p>
+            {% endif %}
+            {% if word.antonyms %}
+                <p class="text-gray-600 mt-2"><strong>Antonyms:</strong> {{ word.antonyms }}</p>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <form action="{% url 'save_word' word.id %}" method="post" class="mt-4">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Save Word
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">No word found for today.</p>
+    {% endif %}
+</div>
+    
+    <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">Word Lookup</h3>
+        <input type="text" id="word-search" class="border p-2 rounded" placeholder="Enter a word...">
+        <button onclick="lookupWord()" class="bg-blue-500 text-white px-4 py-2 rounded ml-2 hover:bg-blue-600">
+            Search
+        </button>
+        <div id="search-result" class="mt-4"></div>
+    </div>
+</div>
+
+<script>
+function lookupWord() {
+    const word = document.getElementById('word-search').value;
+    fetch(`/lookup/?word=${word}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('search-result').innerHTML = 
+                    `<p class="text-red-500">Word not found</p>`;
+            } else {
+                document.getElementById('search-result').innerHTML = `
+                    <div class="bg-gray-100 p-4 rounded">
+                        <h4 class="font-semibold">${data.word}</h4>
+                        <p><strong>Definition:</strong> ${data.definition}</p>
+                        ${data.example ? `<p><strong>Example:</strong> ${data.example}</p>` : ''}
+                        ${data.synonyms ? `<p><strong>Synonyms:</strong> ${data.synonyms}</p>` : ''}
+                        ${data.antonyms ? `<p><strong>Antonyms:</strong> ${data.antonyms}</p>` : ''}
+                    </div>
+                `;
+            }
+        });
+}
+</script>
