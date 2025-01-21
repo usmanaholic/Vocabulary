@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vocabulary Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 text-white">
+        <div class="container mx-auto flex justify-between">
+            <a href="{% url 'word_of_day' %}" class="font-bold">Vocabulary Builder</a>
+            <div>
+                <a href="{% url 'saved_words' %}" class="mx-2">Saved Words</a>
+                <a href="{% url 'quiz' %}" class="mx-2">Quiz</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto p-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

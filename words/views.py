@@ -73,7 +73,7 @@ def save_word(request, word_id):
 @login_required
 def saved_words(request):
     saved = SavedWord.objects.filter(user=request.user).select_related('word')
-    return render(request, 'words/saved_words.html', {'saved_words': saved})
+    return render(request, 'saved_words.html', {'saved_words': saved})
 
 def vocabulary_quiz(request):
     saved_words = Word.objects.all().order_by('?')[:5]
